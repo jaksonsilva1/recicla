@@ -358,7 +358,7 @@
 <div class="card">
     <div class="header">
         <h1>♻️ ReciclaMobile</h1>
-        <p>Nome opcional • Peso vazio = 1kg • Salva automaticamente</p>
+      <!--  <p>Nome opcional • Peso vazio = 1kg • Salva automaticamente</p>-->
     </div>
 
     <div class="content">
@@ -370,7 +370,7 @@
                     <input type="text" id="novoNome" placeholder="Opcional" autocomplete="off">
                 </div>
                 <div class="campo">
-                    <label>R$/KG</label>
+                    <label>PREÇO</label>
                     <input type="number" id="novoPreco" step="0.01" placeholder="00,00" autocomplete="off">
                 </div>
                 <div class="campo">
@@ -465,25 +465,22 @@
         totalSpan.innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
     }
 
+    // RELATÓRIO SIMPLIFICADO PARA O WHATSAPP
     function gerarResumo() {
         if (materiais.length === 0) {
             return "Nenhum material adicionado.";
         }
 
-        let resumo = "📋 *RESUMO DE MATERIAIS RECICLÁVEIS*\n\n";
+        let resumo = "📋 LISTA DE MATERIAIS\n\n";
         
         for (let m of materiais) {
-            const nome = m.nome || "(sem nome)";
+            const nome = m.nome || "Material";
             const valorItem = m.preco * m.peso;
-            resumo += `📦 *${nome}*\n`;
-            resumo += `   💰 R$ ${m.preco.toFixed(2)}/kg × ${m.peso.toFixed(2)}kg = R$ ${valorItem.toFixed(2)}\n\n`;
+            resumo += `${nome}: ${m.peso.toFixed(2)}kg x R$ ${m.preco.toFixed(2)} = R$ ${valorItem.toFixed(2)}\n`;
         }
         
         const totalGeral = calcularTotal();
-        resumo += `━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━\n`;
-        resumo += `💰 *TOTAL GERAL: R$ ${totalGeral.toFixed(2)}*\n\n`;
-        resumo += `📅 ${new Date().toLocaleString('pt-BR')}\n`;
-        resumo += `♻️ *ReciclaMobile* - Calculadora de Recicláveis`;
+        resumo += `\n💰 TOTAL: R$ ${totalGeral.toFixed(2)}`;
         
         return resumo;
     }
