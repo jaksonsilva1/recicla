@@ -421,7 +421,6 @@
         };
         localStorage.setItem('reciclaMobile_dados', JSON.stringify(dados));
         
-        // Mostrar indicador de salvamento
         salvoIndicator.classList.add('show');
         setTimeout(() => {
             salvoIndicator.classList.remove('show');
@@ -437,7 +436,6 @@
                 materiais = dados.materiais || [];
                 proximoId = dados.proximoId || 1;
                 
-                // Garantir que cada material tenha todos os campos necessários
                 materiais = materiais.map(m => ({
                     id: m.id,
                     nome: m.nome || '',
@@ -507,7 +505,6 @@
         if (materiais.length === 0) {
             listaDiv.innerHTML = '<div class="sem-itens">Nenhum material adicionado</div>';
             atualizarTotal();
-            salvarDados(); // Salvar estado vazio também
             return;
         }
 
@@ -584,7 +581,6 @@
         });
 
         atualizarTotal();
-        salvarDados(); // Salvar após qualquer modificação
     }
 
     function escapeHtml(text) {
@@ -626,8 +622,12 @@
 
         limparCampos();
         renderizarLista();
-        salvarDados(); // Salvar após adicionar
-        novoNome.focus();
+        salvarDados();
+        
+        // Remove o foco de qualquer campo ativo
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
     }
 
     function limparTudo() {
@@ -635,14 +635,18 @@
             materiais = [];
             proximoId = 1;
             renderizarLista();
-            salvarDados(); // Salvar estado vazio
+            salvarDados();
+            
+            // Remove o foco de qualquer campo ativo
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
         }
     }
 
     // Carregar dados salvos ao iniciar
     const dadosCarregados = carregarDados();
     if (!dadosCarregados) {
-        // Se não tiver dados salvos, começar vazio
         materiais = [];
         proximoId = 1;
     }
@@ -650,10 +654,6 @@
     btnAdicionar.addEventListener('click', adicionarMaterial);
     btnLimparTudo.addEventListener('click', limparTudo);
     btnWhatsapp.addEventListener('click', compartilharWhatsApp);
-
-    novoNome.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
-    novoPreco.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
-    novoPeso.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
 
     renderizarLista();
 </script>
