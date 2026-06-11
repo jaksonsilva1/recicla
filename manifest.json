@@ -1,8 +1,8 @@
 {
-  "name": "Recida - Calculadora de Recicláveis",
-  "short_name": "Recida",
+  "name": "Recicla - Calculadora de Recicláveis",
+  "short_name": "Recicla",
   "description": "Calcule materiais recicláveis de forma rápida",
-  "start_url": "/",
+  "start_url": "/recicla/index.html",
   "display": "standalone",
   "theme_color": "#2d6a4f",
   "background_color": "#d4e6c3",
