@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ReciclaMobile - Calculadora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #d4e6c3;
+            min-height: 100vh;
+            padding: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .card {
+            background: white;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d6a4f;
+            color: white;
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header p {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .add-area {
+            background: #f7f9f2;
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8c3;
+        }
+
+        .add-area h3 {
+            color: #2d6a4f;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .row-campos {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .campo {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: 600;
+            color: #2d6a4f;
+            margin-bottom: 4px;
+            font-size: 0.65rem;
+            text-align: center;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 12px 6px;
+            border: 2px solid #d4debc;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            background: white;
+            text-align: center;
+            -webkit-appearance: none;
+        }
+
+        .campo input:focus {
+            outline: none;
+            border-color: #2d6a4f;
+        }
+
+        .campo input::placeholder {
+            color: #bbb;
+            font-size: 0.75rem;
+        }
+
+        .btn-add {
+            background: #2d6a4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s;
+        }
+
+        .btn-add:active {
+            transform: scale(0.97);
+            background: #1f543d;
+        }
+
+        .lista-materiais {
+            max-height: 380px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .item-material {
+            background: white;
+            border: 1px solid #e2e8c3;
+            border-radius: 16px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .campo-nome {
+            flex: 2;
+            min-width: 80px;
+        }
+
+        .campo-nome input {
+            width: 100%;
+            padding: 8px 6px;
+            border: 1px solid #d4debc;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            background: #fefef9;
+        }
+
+        .campo-preco {
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .campo-preco input {
+            width: 100%;
+            padding: 8px 6px;
+            border: 1px solid #d4debc;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            background: #fefef9;
+            text-align: center;
+        }
+
+        .campo-peso {
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .campo-peso input {
+            width: 100%;
+            padding: 8px 6px;
+            border: 1px solid #d4debc;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            background: #fefef9;
+            text-align: center;
+        }
+
+        .valor-item {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #1b5e2a;
+            min-width: 70px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .btn-remover {
+            background: #f5d7d7;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #c0392b;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+
+        .btn-remover:active {
+            background: #e0a0a0;
+            transform: scale(0.95);
+        }
+
+        .total-area {
+            background: #2d6a4f;
+            color: white;
+            padding: 14px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .total-label {
+            font-size: 0.8rem;
+        }
+
+        .total-valor {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .botoes-acao {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-acao {
+            flex: 1;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-acao:active {
+            transform: scale(0.97);
+            background: #7f8c8d;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:active {
+            background: #1da851;
+        }
+
+        .sem-itens {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-style: italic;
+            background: #f9fbf5;
+            border-radius: 16px;
+            font-size: 0.85rem;
+        }
+
+        .salvo-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d6a4f;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        .salvo-indicator.show {
+            opacity: 0.8;
+        }
+
+        input {
+            font-family: monospace;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .lista-materiais::-webkit-scrollbar {
+            width: 4px;
+        }
+        .lista-materiais::-webkit-scrollbar-track {
+            background: #e2e8c3;
+            border-radius: 10px;
+        }
+        .lista-materiais::-webkit-scrollbar-thumb {
+            background: #2d6a4f;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 500px) {
+            .item-material {
+                padding: 6px 8px;
+                gap: 6px;
+            }
+            .campo-nome {
+                min-width: 60px;
+            }
+            .campo-preco, .campo-peso {
+                min-width: 55px;
+            }
+            .campo-nome input, .campo-preco input, .campo-peso input {
+                padding: 6px 4px;
+                font-size: 0.7rem;
+            }
+            .valor-item {
+                font-size: 0.7rem;
+                min-width: 55px;
+            }
+            .btn-remover {
+                padding: 4px 8px;
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>♻️ ReciclaMobile</h1>
+        <p>Nome opcional • Peso vazio = 1kg • Salva automaticamente</p>
+    </div>
+
+    <div class="content">
+        <div class="add-area">
+            <h3>➕ NOVO MATERIAL</h3>
+            <div class="row-campos">
+                <div class="campo">
+                    <label>MATERIAL</label>
+                    <input type="text" id="novoNome" placeholder="Opcional" autocomplete="off">
+                </div>
+                <div class="campo">
+                    <label>R$/KG</label>
+                    <input type="number" id="novoPreco" step="0.01" placeholder="00,00" autocomplete="off">
+                </div>
+                <div class="campo">
+                    <label>PESO</label>
+                    <input type="number" id="novoPeso" step="0.1" placeholder="Vazio=1" autocomplete="off">
+                </div>
+            </div>
+            <button class="btn-add" id="btnAdicionar">✓ ADICIONAR</button>
+        </div>
+
+        <div class="lista-materiais" id="listaMateriais">
+            <div class="sem-itens">Nenhum material adicionado</div>
+        </div>
+
+        <div class="total-area">
+            <span class="total-label">💰 TOTAL GERAL</span>
+            <span class="total-valor" id="totalGeral">R$ 0,00</span>
+        </div>
+
+        <div class="botoes-acao">
+            <button class="btn-acao" id="btnLimparTudo">🗑️ LIMPAR</button>
+            <button class="btn-acao btn-whatsapp" id="btnWhatsapp">📱 WHATSAPP</button>
+        </div>
+    </div>
+</div>
+
+<div id="salvoIndicator" class="salvo-indicator">✓ Salvo automaticamente</div>
+
+<script>
+    let materiais = [];
+    let proximoId = 1;
+
+    const listaDiv = document.getElementById('listaMateriais');
+    const totalSpan = document.getElementById('totalGeral');
+    const btnAdicionar = document.getElementById('btnAdicionar');
+    const btnLimparTudo = document.getElementById('btnLimparTudo');
+    const btnWhatsapp = document.getElementById('btnWhatsapp');
+    const novoNome = document.getElementById('novoNome');
+    const novoPreco = document.getElementById('novoPreco');
+    const novoPeso = document.getElementById('novoPeso');
+    const salvoIndicator = document.getElementById('salvoIndicator');
+
+    // Função para salvar dados no localStorage
+    function salvarDados() {
+        const dados = {
+            materiais: materiais,
+            proximoId: proximoId
+        };
+        localStorage.setItem('reciclaMobile_dados', JSON.stringify(dados));
+        
+        // Mostrar indicador de salvamento
+        salvoIndicator.classList.add('show');
+        setTimeout(() => {
+            salvoIndicator.classList.remove('show');
+        }, 1000);
+    }
+
+    // Função para carregar dados do localStorage
+    function carregarDados() {
+        const dadosSalvos = localStorage.getItem('reciclaMobile_dados');
+        if (dadosSalvos) {
+            try {
+                const dados = JSON.parse(dadosSalvos);
+                materiais = dados.materiais || [];
+                proximoId = dados.proximoId || 1;
+                
+                // Garantir que cada material tenha todos os campos necessários
+                materiais = materiais.map(m => ({
+                    id: m.id,
+                    nome: m.nome || '',
+                    preco: m.preco || 0,
+                    peso: m.peso || 1
+                }));
+                
+                return true;
+            } catch(e) {
+                console.log('Erro ao carregar dados:', e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function calcularTotal() {
+        let total = 0;
+        for (let m of materiais) {
+            total += (m.preco * m.peso);
+        }
+        return total;
+    }
+
+    function atualizarTotal() {
+        const total = calcularTotal();
+        totalSpan.innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    }
+
+    function gerarResumo() {
+        if (materiais.length === 0) {
+            return "Nenhum material adicionado.";
+        }
+
+        let resumo = "📋 *RESUMO DE MATERIAIS RECICLÁVEIS*\n\n";
+        
+        for (let m of materiais) {
+            const nome = m.nome || "(sem nome)";
+            const valorItem = m.preco * m.peso;
+            resumo += `📦 *${nome}*\n`;
+            resumo += `   💰 R$ ${m.preco.toFixed(2)}/kg × ${m.peso.toFixed(2)}kg = R$ ${valorItem.toFixed(2)}\n\n`;
+        }
+        
+        const totalGeral = calcularTotal();
+        resumo += `━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━\n`;
+        resumo += `💰 *TOTAL GERAL: R$ ${totalGeral.toFixed(2)}*\n\n`;
+        resumo += `📅 ${new Date().toLocaleString('pt-BR')}\n`;
+        resumo += `♻️ *ReciclaMobile* - Calculadora de Recicláveis`;
+        
+        return resumo;
+    }
+
+    function compartilharWhatsApp() {
+        if (materiais.length === 0) {
+            alert("Adicione pelo menos um material para compartilhar");
+            return;
+        }
+        
+        const resumo = gerarResumo();
+        const textoCodificado = encodeURIComponent(resumo);
+        const urlWhatsapp = `https://wa.me/?text=${textoCodificado}`;
+        
+        window.open(urlWhatsapp, '_blank');
+    }
+
+    function renderizarLista() {
+        if (materiais.length === 0) {
+            listaDiv.innerHTML = '<div class="sem-itens">Nenhum material adicionado</div>';
+            atualizarTotal();
+            salvarDados(); // Salvar estado vazio também
+            return;
+        }
+
+        let html = '';
+        for (let m of materiais) {
+            const valorItem = m.preco * m.peso;
+            html += `
+                <div class="item-material" data-id="${m.id}">
+                    <div class="campo-nome">
+                        <input type="text" class="edit-nome" value="${escapeHtml(m.nome)}" placeholder="(sem nome)" data-id="${m.id}">
+                    </div>
+                    <div class="campo-preco">
+                        <input type="number" step="0.01" class="edit-preco" value="${m.preco.toFixed(2)}" data-id="${m.id}">
+                    </div>
+                    <div class="campo-peso">
+                        <input type="number" step="0.1" class="edit-peso" value="${m.peso.toFixed(2)}" data-id="${m.id}">
+                    </div>
+                    <div class="valor-item">
+                        R$ ${valorItem.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                    <button class="btn-remover" data-id="${m.id}">✕</button>
+                </div>
+            `;
+        }
+        listaDiv.innerHTML = html;
+
+        document.querySelectorAll('.edit-nome').forEach(input => {
+            input.addEventListener('blur', function(e) {
+                const id = parseInt(this.dataset.id);
+                const material = materiais.find(m => m.id === id);
+                if (material) {
+                    material.nome = this.value;
+                    salvarDados();
+                }
+            });
+        });
+
+        document.querySelectorAll('.edit-preco').forEach(input => {
+            input.addEventListener('blur', function(e) {
+                const id = parseInt(this.dataset.id);
+                const material = materiais.find(m => m.id === id);
+                if (material) {
+                    let val = parseFloat(this.value);
+                    if (isNaN(val)) val = 0;
+                    material.preco = val;
+                    renderizarLista();
+                    salvarDados();
+                }
+            });
+        });
+
+        document.querySelectorAll('.edit-peso').forEach(input => {
+            input.addEventListener('blur', function(e) {
+                const id = parseInt(this.dataset.id);
+                const material = materiais.find(m => m.id === id);
+                if (material) {
+                    let val = parseFloat(this.value);
+                    if (isNaN(val)) val = 0;
+                    if (val <= 0) val = 1;
+                    material.peso = val;
+                    renderizarLista();
+                    salvarDados();
+                }
+            });
+        });
+
+        document.querySelectorAll('.btn-remover').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const id = parseInt(this.dataset.id);
+                materiais = materiais.filter(m => m.id !== id);
+                renderizarLista();
+                salvarDados();
+            });
+        });
+
+        atualizarTotal();
+        salvarDados(); // Salvar após qualquer modificação
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function limparCampos() {
+        novoNome.value = '';
+        novoPreco.value = '';
+        novoPeso.value = '';
+    }
+
+    function adicionarMaterial() {
+        let nome = novoNome.value;
+        let preco = parseFloat(novoPreco.value);
+        let peso = parseFloat(novoPeso.value);
+
+        if (isNaN(preco) || preco <= 0) {
+            alert("Digite um preço válido");
+            return;
+        }
+        
+        if (isNaN(peso) || peso <= 0) {
+            peso = 1;
+        }
+
+        materiais.push({
+            id: proximoId++,
+            nome: nome,
+            preco: preco,
+            peso: peso
+        });
+
+        limparCampos();
+        renderizarLista();
+        salvarDados(); // Salvar após adicionar
+        novoNome.focus();
+    }
+
+    function limparTudo() {
+        if (materiais.length > 0 && confirm("Remover todos os materiais? (Esta ação não pode ser desfeita)")) {
+            materiais = [];
+            proximoId = 1;
+            renderizarLista();
+            salvarDados(); // Salvar estado vazio
+        }
+    }
+
+    // Carregar dados salvos ao iniciar
+    const dadosCarregados = carregarDados();
+    if (!dadosCarregados) {
+        // Se não tiver dados salvos, começar vazio
+        materiais = [];
+        proximoId = 1;
+    }
+
+    btnAdicionar.addEventListener('click', adicionarMaterial);
+    btnLimparTudo.addEventListener('click', limparTudo);
+    btnWhatsapp.addEventListener('click', compartilharWhatsApp);
+
+    novoNome.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
+    novoPreco.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
+    novoPeso.addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarMaterial(); });
+
+    renderizarLista();
+</script>
+</body>
+</html>
