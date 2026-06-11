@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ReciclaMobile - Calculadora</title>
+    <title>Recida - Calculadora de Recicláveis</title>
+    
+    <!-- PWA - Transformar em App -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2d6a4f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Recida">
+    
     <style>
         * {
             margin: 0;
@@ -357,8 +365,8 @@
 <body>
 <div class="card">
     <div class="header">
-        <h1>♻️ ReciclaMobile</h1>
-      <!--  <p>Nome opcional • Peso vazio = 1kg • Salva automaticamente</p>-->
+        <h1>♻️ Recida</h1>
+        <p>Nome opcional • Peso vazio = 1kg • Salva automaticamente</p>
     </div>
 
     <div class="content">
@@ -370,7 +378,7 @@
                     <input type="text" id="novoNome" placeholder="Opcional" autocomplete="off">
                 </div>
                 <div class="campo">
-                    <label>PREÇO</label>
+                    <label>R$/KG</label>
                     <input type="number" id="novoPreco" step="0.01" placeholder="00,00" autocomplete="off">
                 </div>
                 <div class="campo">
@@ -419,7 +427,7 @@
             materiais: materiais,
             proximoId: proximoId
         };
-        localStorage.setItem('reciclaMobile_dados', JSON.stringify(dados));
+        localStorage.setItem('recida_dados', JSON.stringify(dados));
         
         salvoIndicator.classList.add('show');
         setTimeout(() => {
@@ -429,7 +437,7 @@
 
     // Função para carregar dados do localStorage
     function carregarDados() {
-        const dadosSalvos = localStorage.getItem('reciclaMobile_dados');
+        const dadosSalvos = localStorage.getItem('recida_dados');
         if (dadosSalvos) {
             try {
                 const dados = JSON.parse(dadosSalvos);
@@ -621,7 +629,6 @@
         renderizarLista();
         salvarDados();
         
-        // Remove o foco de qualquer campo ativo
         if (document.activeElement) {
             document.activeElement.blur();
         }
@@ -634,25 +641,18 @@
             renderizarLista();
             salvarDados();
             
-            // Remove o foco de qualquer campo ativo
             if (document.activeElement) {
                 document.activeElement.blur();
             }
         }
     }
 
-    // Carregar dados salvos ao iniciar
-    const dadosCarregados = carregarDados();
-    if (!dadosCarregados) {
-        materiais = [];
-        proximoId = 1;
-    }
+    carregarDados();
+    renderizarLista();
 
     btnAdicionar.addEventListener('click', adicionarMaterial);
     btnLimparTudo.addEventListener('click', limparTudo);
     btnWhatsapp.addEventListener('click', compartilharWhatsApp);
-
-    renderizarLista();
 </script>
 </body>
 </html>
